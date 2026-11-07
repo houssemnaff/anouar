@@ -2,10 +2,12 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Menu, X, LogOut } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import {
+  Menu, X, LogOut, LayoutDashboard, Package, Percent, ShoppingBag,
+  ChevronRight, ExternalLink,
+} from 'lucide-react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
 
@@ -16,25 +18,13 @@ interface AdminHeaderProps {
 
 export function AdminHeader({ activeTab, onTabChange }: AdminHeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [userEmail, setUserEmail] = useState<string>('Admin');
   const router = useRouter();
   const { toast } = useToast();
-
-  useEffect(() => {
-    const getUserEmail = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user?.email) {
-        setUserEmail(session.user.email);
-      }
-    };
-
-    getUserEmail();
-  }, []);
 
   const handleLogout = async () => {
     try {
       const { error } = await supabase.auth.signOut();
-      
+
       if (error) {
         toast({
           title: "Erreur",
@@ -61,99 +51,118 @@ export function AdminHeader({ activeTab, onTabChange }: AdminHeaderProps) {
   };
 
   const tabs = [
-    { id: 'dashboard', label: 'Dashboard' },
-    { id: 'products', label: 'Products' },
-    { id: 'promotions', label: 'Promotions' },
-    { id: 'orders', label: 'Orders' },
+    { id: 'dashboard', label: 'Tableau de bord', short: 'Dashboard', icon: LayoutDashboard },
+    { id: 'products', label: 'Produits', short: 'Produits', icon: Package },
+    { id: 'promotions', label: 'Promotions', short: 'Promos', icon: Percent },
+    { id: 'orders', label: 'Commandes', short: 'Commandes', icon: ShoppingBag },
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg border-b border-blue-500">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 md:gap-3 hover:opacity-90 transition-opacity min-w-0 max-w-[60%]">
-            <div className="relative w-10 h-10 md:w-12 md:h-12 bg-white rounded-full p-1 shadow-md flex-shrink-0">
-              <Image 
-                src="/anouar1-removebg-preview.png" 
-                alt="Anouar Market Logo" 
-                width={48}
-                height={48}
-                className="object-contain"
-              />
-            </div>
-            <div className="min-w-0 flex flex-col justify-center">
-              <h1 className="text-sm md:text-lg font-bold truncate leading-tight">
-                {userEmail}
-              </h1>
-              <p className="text-[10px] md:text-xs text-blue-100 hidden sm:block truncate">
+    <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 shadow-sm">
+      <div className="container mx-auto px-4 py-3">
+        <div className="flex items-center justify-between gap-3">
+          {/* Profil Admin */}
+          <div className="flex items-center gap-3 min-w-0">
+            {/* Logo — même rendu que le header public */}
+            <Link href="/" className="flex items-center gap-3 flex-shrink-0">
+              <div className="relative w-12 h-12 rounded-full overflow-hidden bg-blue-100 flex items-center justify-center">
+                <img
+                  src="/anouar1-removebg-preview.png"
+                  alt="Logo Anouar Market"
+                  className="w-10 h-10 object-contain"
+                />
+              </div>
+            </Link>
+
+            <div className="min-w-0">
+              <h1 className="text-lg md:text-xl font-bold leading-tight bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent truncate">
                 Anouar Market
+              </h1>
+              <p className="text-[10px] md:text-xs font-medium text-blue-600/70 truncate">
+                Espace Admin
               </p>
             </div>
-          </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-2">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => onTabChange(tab.id)}
-                className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
-                  activeTab === tab.id
-                    ? 'bg-white text-blue-700 shadow-md'
-                    : 'hover:bg-blue-500 text-white'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
+            {/* Lien vers le site */}
+            <Link
+              href="/"
+              className="hidden lg:inline-flex items-center gap-1.5 ml-2 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-primary hover:border-primary/40 transition-colors"
+            >
+              <ExternalLink className="w-3.5 h-3.5" />
+              Voir le site
+            </Link>
+          </div>
+
+          {/* Navigation Desktop : pilule */}
+          <nav className="hidden md:flex items-center gap-1 rounded-full border border-border bg-secondary/70 p-1.5">
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => onTabChange(tab.id)}
+                  className={`relative flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                    isActive
+                      ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-md shadow-blue-600/25'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-background'
+                  }`}
+                >
+                  <Icon className="w-4 h-4" />
+                  <span>{tab.label}</span>
+                </button>
+              );
+            })}
           </nav>
 
-          {/* Logout Button */}
-          <div className="flex items-center gap-1 md:gap-2 flex-shrink-0 ml-2">
+          {/* Actions */}
+          <div className="flex items-center gap-1.5 flex-shrink-0">
             <Button
               onClick={handleLogout}
               variant="ghost"
               size="sm"
-              className="text-white hover:bg-blue-500 rounded-lg transition-all duration-300 px-2 md:px-3"
+              className="text-muted-foreground hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 rounded-xl transition-all duration-300 px-2 md:px-3 gap-2"
             >
-              <LogOut className="w-4 h-4 md:mr-2" />
+              <LogOut className="w-4 h-4" />
               <span className="hidden md:inline">Déconnexion</span>
             </Button>
 
-            {/* Mobile Menu Toggle */}
+            {/* Menu mobile */}
             <button
-              className="md:hidden p-2 hover:bg-blue-500 rounded-lg transition-colors"
+              className="md:hidden p-2 rounded-xl hover:bg-secondary transition-colors text-foreground"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Menu"
             >
-              {mobileMenuOpen ? (
-                <X className="w-6 h-6" />
-              ) : (
-                <Menu className="w-6 h-6" />
-              )}
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Navigation Mobile */}
         {mobileMenuOpen && (
-          <nav className="md:hidden mt-4 pt-4 space-y-2 border-t border-blue-500">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => {
-                  onTabChange(tab.id);
-                  setMobileMenuOpen(false);
-                }}
-                className={`block w-full text-left px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
-                  activeTab === tab.id
-                    ? 'bg-white text-blue-700 shadow-md'
-                    : 'hover:bg-blue-500 text-white'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
+          <nav className="md:hidden mt-3 pt-3 space-y-1.5 border-t border-border">
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => {
+                    onTabChange(tab.id);
+                    setMobileMenuOpen(false);
+                  }}
+                  className={`flex items-center gap-3 w-full text-left px-4 py-3 rounded-xl font-medium transition-all duration-300 ${
+                    isActive
+                      ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-md shadow-blue-600/25'
+                      : 'text-foreground hover:bg-secondary'
+                  }`}
+                >
+                  <Icon className="w-4.5 h-4.5" />
+                  <span className="flex-1">{tab.label}</span>
+                  <ChevronRight className={`w-4 h-4 transition-opacity ${isActive ? 'opacity-100' : 'opacity-40'}`} />
+                </button>
+              );
+            })}
           </nav>
         )}
       </div>

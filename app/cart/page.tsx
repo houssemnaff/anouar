@@ -36,15 +36,15 @@ export default function CartPage() {
                 <div className="text-6xl">🛒</div>
               </div>
               <h2 className="text-3xl font-bold text-foreground mb-4">
-                Your cart is empty
+                Votre panier est vide
               </h2>
               <p className="text-muted-foreground mb-8">
-                Add some delicious groceries to get started!
+                Ajoutez des produits à votre panier pour commencer !
               </p>
               <Link href="/products">
                 <Button size="lg" className="rounded-lg gap-2">
                   <ShoppingCart className="w-5 h-5" />
-                  Continue Shopping
+                  Continuer mes achats
                 </Button>
               </Link>
             </div>
@@ -118,10 +118,10 @@ export default function CartPage() {
 
                             <div className="text-right">
                               <p className="text-xs text-muted-foreground mb-1">
-                                ${product.price.toFixed(2)} each
+                                {product.price.toFixed(2)}  Dt/ unité
                               </p>
                               <p className="text-lg md:text-xl font-bold text-primary">
-                                ${itemTotal.toFixed(2)}
+                                {itemTotal.toFixed(2)}  Dt
                               </p>
                             </div>
                           </div>
@@ -131,7 +131,7 @@ export default function CartPage() {
                         <button
                           onClick={() => removeFromCart(product.id)}
                           className="p-2 text-muted-foreground hover:text-destructive transition-colors"
-                          title="Remove from cart"
+                          title="Retirer du panier"
                         >
                           <Trash2 className="w-5 h-5" />
                         </button>
@@ -144,7 +144,7 @@ export default function CartPage() {
                 <div className="mt-8">
                   <Link href="/products">
                     <Button variant="outline" className="rounded-lg bg-transparent">
-                      Continue Shopping
+                      Continuer mes achats
                     </Button>
                   </Link>
                 </div>
@@ -154,30 +154,30 @@ export default function CartPage() {
               <div className="lg:col-span-1">
                 <div className="bg-card border border-border rounded-2xl p-6 sticky top-24">
                   <h2 className="text-2xl font-bold text-primary mb-6">
-                    Order Summary
+                    Résumé de la commande
                   </h2>
 
                   <div className="space-y-3 mb-6 pb-6 border-b border-border">
                     <div className="flex justify-between text-foreground">
-                      <span>Subtotal:</span>
-                      <span>${cartTotal.toFixed(2)}</span>
+                      <span>Sous-total :</span>
+                      <span>{cartTotal.toFixed(2)} Dt</span>
                     </div>
                     <div className="flex justify-between text-foreground">
-                      <span>Shipping:</span>
-                      <span className="text-green-600">Free</span>
+                      <span>Livraison :</span>
+                      <span className="text-green-600">Gratuite</span>
                     </div>
                     <div className="flex justify-between text-foreground">
-                      <span>Tax:</span>
-                      <span>${(cartTotal * 0.1).toFixed(2)}</span>
+                      <span>Taxes :</span>
+                      <span>{(cartTotal * 0.1).toFixed(2)} Dt</span>
                     </div>
                   </div>
 
                   <div className="flex justify-between items-center mb-6">
                     <span className="text-lg font-semibold text-foreground">
-                      Total:
+                      Total :
                     </span>
                     <span className="text-3xl font-bold text-primary">
-                      ${(cartTotal * 1.1).toFixed(2)}
+                      {(cartTotal * 1.1).toFixed(2)} Dt
                     </span>
                   </div>
 

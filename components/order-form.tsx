@@ -20,21 +20,21 @@ export function OrderForm({ formData, isSubmitting, onInputChange, onSubmit }: O
   return (
     <div className="bg-card border border-border rounded-2xl p-6 md:p-8">
       <h2 className="text-2xl font-bold text-primary mb-6">
-        Delivery Information
+        Informations de livraison
       </h2>
 
       <form onSubmit={onSubmit} className="space-y-6">
         {/* Name */}
         <div>
           <label className="block text-sm font-semibold text-foreground mb-2">
-            Full Name *
+            Nom complet *
           </label>
           <input
             type="text"
             name="customerName"
             value={formData.customerName}
             onChange={onInputChange}
-            placeholder="Enter your full name"
+            placeholder="Entrez votre nom complet"
             className="w-full px-4 py-3 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
             required
           />
@@ -43,14 +43,14 @@ export function OrderForm({ formData, isSubmitting, onInputChange, onSubmit }: O
         {/* Phone */}
         <div>
           <label className="block text-sm font-semibold text-foreground mb-2">
-            Phone Number *
+            Numéro de téléphone *
           </label>
           <input
             type="tel"
             name="customerPhone"
             value={formData.customerPhone}
             onChange={onInputChange}
-            placeholder="Enter your phone number"
+            placeholder="Entrez votre numéro de téléphone"
             className="w-full px-4 py-3 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
             required
           />
@@ -59,13 +59,13 @@ export function OrderForm({ formData, isSubmitting, onInputChange, onSubmit }: O
         {/* Address */}
         <div>
           <label className="block text-sm font-semibold text-foreground mb-2">
-            Delivery Address *
+            Adresse de livraison *
           </label>
           <textarea
             name="deliveryAddress"
             value={formData.deliveryAddress}
             onChange={onInputChange}
-            placeholder="Enter your complete delivery address"
+            placeholder="Entrez votre adresse complète de livraison"
             rows={4}
             className="w-full px-4 py-3 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary resize-none"
             required

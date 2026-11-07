@@ -3,9 +3,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Product } from '@/lib/types';
-import { Button } from '@/components/ui/button';
 import { useStore } from '@/lib/store-context';
-import { ShoppingCart } from 'lucide-react';
+import { ShoppingCart, Eye, Sparkles, Check } from 'lucide-react';
+import { useState } from 'react';
 
 interface ProductCardProps {
   product: Product;
@@ -13,79 +13,140 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const { addToCart } = useStore();
+  const [added, setAdded] = useState(false);
+
+  const hasDiscount = !!product.discount && product.discount > 0;
+  const finalPrice = product.price * (1 - (product.discount ?? 0) / 100);
 
   const handleAddToCart = () => {
+    if (!product.inStock) return;
     addToCart(product.id, 1);
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1800);
   };
 
   return (
-    <div className="rounded-2xl bg-card overflow-hidden border border-border hover:shadow-lg transition-shadow duration-300 flex flex-col h-full">
-      {/* Product Image */}
-      <div className="relative w-full aspect-[4/3] bg-secondary overflow-hidden">
+    <div className="group relative rounded-3xl bg-card overflow-hidden border border-border/60 flex flex-col h-full transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-1.5 hover:border-primary/30">
+      {/* Glow decoratif */}
+      <div className="pointer-events-none absolute -top-24 -right-24 w-48 h-48 rounded-full bg-primary/10 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+
+      {/* Image */}
+      <Link
+        href={`/product/${product.id}`}
+        className="relative block w-full aspect-[4/3] bg-gradient-to-br from-secondary via-background to-secondary overflow-hidden"
+      >
         {product.inStock ? (
           <Image
-            src={product.image || "/placeholder.svg"}
+            src={product.image || '/placeholder.svg'}
             alt={product.name}
             fill
-            className="object-cover hover:scale-105 transition-transform duration-300"
+            sizes="(max-width: 640px) 50vw, 25vw"
+            className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
           />
         ) : (
-          <div className="w-full h-full bg-muted flex items-center justify-center">
-            <span className="text-muted-foreground">Out of Stock</span>
+          <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-muted-foreground">
+            <div className="w-12 h-12 rounded-2xl bg-muted flex items-center justify-center">
+              <Eye className="w-5 h-5 opacity-50" />
+            </div>
+            <span className="text-xs font-medium uppercase tracking-widest">
+              Rupture de stock
+            </span>
           </div>
         )}
-        {product.featured && (
-          <div className="absolute top-3 right-3 bg-accent text-accent-foreground px-3 py-1 rounded-full text-xs font-semibold">
-            Featured
-          </div>
-        )}
-        {product.discount && product.discount > 0 && (
-          <div className="absolute top-3 left-3 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
-            -{product.discount}%
-          </div>
-        )}
-      </div>
 
-      {/* Product Info */}
-      <div className="p-4 flex flex-col flex-grow">
-        <div className="flex-grow">
-          <Link href={`/product/${product.id}`}>
-            <h3 className="font-semibold text-lg text-card-foreground hover:text-primary transition-colors mb-1">
-              {product.name}
-            </h3>
-          </Link>
-          <p className="text-sm text-muted-foreground mb-2">{product.category}</p>
-          <p className="text-sm text-card-foreground line-clamp-2 mb-3">
-            {product.description}
-          </p>
+        {/* Damier par défaut derrière l'image pendant le chargement */}
+        <div className="absolute inset-0 bg-[linear-gradient(45deg,#e5e7eb_25%,transparent_25%,transparent_75%,#e5e7eb_75%),linear-gradient(45deg,#e5e7eb_25%,transparent_25%,transparent_75%,#e5e7eb_75%)] bg-[length:20px_20px] bg-[position:0_0,10px_10px] opacity-0 -z-10" />
+
+        {/* Badges */}
+        <div className="absolute top-3 left-3 flex flex-col gap-1.5">
+          {hasDiscount && (
+            <span className="bg-gradient-to-r from-red-500 to-rose-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg shadow-red-500/30">
+              -{product.discount}%
+            </span>
+          )}
+          {product.featured && (
+            <span className="bg-primary/90 backdrop-blur text-primary-foreground px-3 py-1 rounded-full text-xs font-semibold shadow-md flex items-center gap-1">
+              <Sparkles className="w-3 h-3" />
+              À la une
+            </span>
+          )}
         </div>
 
-        {/* Price and Action */}
-        {/* Price and Action */}
-        <div className="flex items-center justify-between pt-3 border-t border-blue-100">
-          <div>
-            {product.discount && product.discount > 0 ? (
-              <div className="flex flex-col">
-                <span className="text-sm text-gray-400 line-through">
-                  ${product.price.toFixed(2)}
-                </span>
-                <span className="text-2xl font-bold text-red-600">
-                  ${(product.price * (1 - product.discount / 100)).toFixed(2)}
-                </span>
-              </div>
-            ) : (
-              <div className="text-2xl font-bold text-blue-600">
-                ${product.price.toFixed(2)}
-              </div>
+        {/* Bouton aperçu au survol */}
+        <div className="absolute inset-x-3 bottom-3 opacity-0 translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+          <div className="rounded-xl bg-background/80 backdrop-blur-md border border-border/50 text-center py-2 text-sm font-medium text-foreground flex items-center justify-center gap-2">
+            <Eye className="w-4 h-4" />
+            Voir le produit
+          </div>
+        </div>
+      </Link>
+
+      {/* Info */}
+      <div className="p-4 flex flex-col flex-grow gap-2">
+        <span className="text-[11px] font-semibold uppercase tracking-widest text-primary/70">
+          {product.category}
+        </span>
+
+        <Link href={`/product/${product.id}`}>
+          <h3 className="font-semibold text-base leading-snug text-card-foreground line-clamp-1 group-hover:text-primary transition-colors">
+            {product.name}
+          </h3>
+        </Link>
+
+        <p className="text-sm text-muted-foreground line-clamp-2 flex-grow">
+          {product.description}
+        </p>
+
+        {/* Prix + action */}
+        <div className="flex items-end justify-between pt-2">
+          <div className="flex items-baseline gap-2">
+            <span
+              className={`text-xl font-bold tracking-tight ${
+                hasDiscount ? 'text-red-500' : 'text-foreground'
+              }`}
+            >
+             {finalPrice.toFixed(2)}  Dt
+            </span>
+            {hasDiscount && (
+              <span className="text-sm text-muted-foreground line-through">
+               {product.price.toFixed(2)}  Dt
+              </span>
             )}
           </div>
-          <Button
+
+          <button
             onClick={handleAddToCart}
             disabled={!product.inStock}
-            className="gap-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg transition-all px-3 py-1.5 h-8"
+            aria-label="Ajouter au panier"
+            className={`h-10 w-10 rounded-full flex items-center justify-center transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed ${
+              added
+                ? 'bg-emerald-500 text-white scale-110'
+                : 'bg-primary text-primary-foreground shadow-md shadow-primary/25 hover:shadow-lg hover:shadow-primary/40 hover:scale-110 active:scale-95'
+            }`}
           >
-            <ShoppingCart className="w-3.5 h-3.5" />
-          </Button>
+            {added ? (
+              <Check className="w-4 h-4" />
+            ) : (
+              <ShoppingCart className="w-4 h-4" />
+            )}
+          </button>
+        </div>
+
+        {/* Stock */}
+        <div className="flex items-center gap-1.5 text-xs">
+          {product.inStock ? (
+            <>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-emerald-600 dark:text-emerald-400 font-medium">
+                En stock
+              </span>
+            </>
+          ) : (
+            <>
+              <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
+              <span className="text-red-500 font-medium">Indisponible</span>
+            </>
+          )}
         </div>
       </div>
     </div>

@@ -32,17 +32,17 @@ export default function ProductDetailPage({
             className="mb-8 rounded-lg gap-2"
           >
             <ChevronLeft className="w-4 h-4" />
-            Go Back
+            Retour
           </Button>
           <div className="text-center">
             <h1 className="text-2xl font-bold text-foreground mb-4">
-              Product not found
+              Produit introuvable
             </h1>
             <p className="text-muted-foreground mb-8">
-              The product you're looking for doesn't exist.
+              Le produit que vous recherchez n'existe pas.
             </p>
             <Link href="/products">
-              <Button className="rounded-lg">Back to Products</Button>
+              <Button className="rounded-lg">Retour aux produits</Button>
             </Link>
           </div>
         </div>
@@ -75,7 +75,7 @@ export default function ProductDetailPage({
             className="rounded-lg gap-2"
           >
             <ChevronLeft className="w-4 h-4" />
-            Go Back
+            Retour
           </Button>
         </div>
       </div>
@@ -98,18 +98,18 @@ export default function ProductDetailPage({
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
                     <span className="text-lg text-muted-foreground">
-                      Out of Stock
+                      Rupture de stock
                     </span>
                   </div>
                 )}
                 {product.featured && (
                   <div className="absolute top-4 right-4 bg-accent text-accent-foreground px-4 py-2 rounded-full font-semibold">
-                    Featured
+                    À la une
                   </div>
                 )}
                 {product.discount && product.discount > 0 && (
                   <div className="absolute top-4 left-4 bg-red-500 text-white px-4 py-2 rounded-full font-bold text-lg shadow-lg">
-                    -{product.discount}% OFF
+                    -{product.discount}% DE RÉDUCTION
                   </div>
                 )}
               </div>
@@ -135,11 +135,11 @@ export default function ProductDetailPage({
               <div className="mb-8">
                 {product.inStock ? (
                   <p className="text-lg font-semibold text-green-600">
-                    ✓ In Stock
+                    ✓ En stock
                   </p>
                 ) : (
                   <p className="text-lg font-semibold text-red-600">
-                    Out of Stock
+                    Rupture de stock
                   </p>
                 )}
               </div>
@@ -162,7 +162,7 @@ export default function ProductDetailPage({
                 )}
                 {product.discount && product.discount > 0 && (
                   <p className="text-lg text-green-600 font-semibold mt-2">
-                    You save ${(product.price * (product.discount / 100)).toFixed(2)} ({product.discount}% off)
+                    Vous économisez ${(product.price * (product.discount / 100)).toFixed(2)} (-{product.discount}%)
                   </p>
                 )}
               </div>
@@ -171,7 +171,7 @@ export default function ProductDetailPage({
               {product.inStock && (
                 <div className="flex items-center gap-4 mb-8">
                   <span className="text-lg font-semibold text-foreground">
-                    Quantity:
+                    Quantité :
                   </span>
                   <div className="flex items-center border border-border rounded-lg">
                     <button
@@ -221,19 +221,18 @@ export default function ProductDetailPage({
               <div className="mt-12 pt-8 border-t border-border space-y-4">
                 <div>
                   <h3 className="font-semibold text-primary mb-2">
-                    Delivery Information
+                    Informations de livraison
                   </h3>
                   <p className="text-sm text-muted-foreground">
-                    Fast delivery available. Cash on delivery accepted.
+                    Livraison rapide disponible. Paiement en espèces à la livraison.
                   </p>
                 </div>
                 <div>
                   <h3 className="font-semibold text-primary mb-2">
-                    Quality Guarantee
+                    Garantie qualité
                   </h3>
                   <p className="text-sm text-muted-foreground">
-                    We guarantee fresh, quality products. If you're not satisfied,
-                    we'll make it right.
+                    Nous garantissons des produits authentiques et de qualité. Si vous n'êtes pas satisfait, nous ferons le nécessaire.
                   </p>
                 </div>
               </div>
@@ -246,10 +245,10 @@ export default function ProductDetailPage({
       <section className="py-12 bg-secondary">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-primary mb-8">
-            More in {product.category}
+            Plus en {product.category}
           </h2>
           <Link href={`/products?category=${product.category}`}>
-            <Button className="rounded-lg">Browse Category</Button>
+            <Button className="rounded-lg">Parcourir la catégorie</Button>
           </Link>
         </div>
       </section>

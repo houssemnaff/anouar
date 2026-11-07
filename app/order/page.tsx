@@ -37,12 +37,12 @@ export default function OrderPage() {
     e.preventDefault();
     
     if (!formData.customerName || !formData.customerPhone || !formData.deliveryAddress) {
-      alert('Please fill in all fields');
+      alert('Veuillez remplir tous les champs');
       return;
     }
 
     if (cart.length === 0) {
-      alert('Your cart is empty');
+      alert('Votre panier est vide');
       return;
     }
 
@@ -84,7 +84,7 @@ export default function OrderPage() {
       setStep('confirmation');
     } catch (error) {
       console.error('Error creating order:', error);
-      alert('Failed to create order. Please try again.');
+      alert('Échec de la création de la commande. Veuillez réessayer.');
     } finally {
       setIsSubmitting(false);
     }
