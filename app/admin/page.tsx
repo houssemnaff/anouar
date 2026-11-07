@@ -17,7 +17,7 @@ export default function AdminPage() {
         <AdminHeader activeTab={activeTab} onTabChange={setActiveTab} />
 
         <section className="container mx-auto px-4 py-8">
-          {activeTab === 'dashboard' && <AdminDashboard />}
+          {activeTab === 'dashboard' && <AdminDashboard onNavigate={setActiveTab} />}
           {activeTab === 'products' && <AdminProducts />}
           {activeTab === 'promotions' && <AdminPromotions />}
           {activeTab === 'orders' && <AdminOrders />}

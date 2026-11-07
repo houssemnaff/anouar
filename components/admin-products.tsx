@@ -64,8 +64,8 @@ export function AdminProducts() {
       // Upload image to Supabase Storage if new image is selected
       if (imageFile) {
         toast({
-          title: "Uploading image...",
-          description: "Please wait while we upload the image.",
+          title: "Téléversement de l'image...",
+          description: "Veuillez patienter pendant l'enregistrement.",
         });
         imageUrl = await uploadImage(imageFile, 'products');
       }
@@ -84,14 +84,14 @@ export function AdminProducts() {
       if (editingProductId) {
         await updateProduct(editingProductId, productData);
         toast({
-          title: "Product updated",
-          description: "The product has been updated successfully.",
+          title: "Produit modifié",
+          description: "Le produit a été mis à jour avec succès.",
         });
       } else {
         await addProduct(productData);
         toast({
-          title: "Product added",
-          description: "The new product has been added successfully.",
+          title: "Produit ajouté",
+          description: "Le nouveau produit a été ajouté avec succès.",
         });
       }
       resetForm();
@@ -136,29 +136,29 @@ export function AdminProducts() {
 
   const handleDelete = (productId: string) => {
     toast({
-      title: "Confirm deletion",
-      description: "Are you sure you want to delete this product?",
+      title: "Confirmer la suppression",
+      description: "Voulez-vous vraiment supprimer ce produit ?",
       action: (
         <button
           onClick={async () => {
             try {
               await deleteProduct(productId);
               toast({
-                title: "Product deleted",
-                description: "The product has been deleted successfully.",
+                title: "Produit supprimé",
+                description: "Le produit a été supprimé avec succès.",
                 variant: "destructive",
               });
             } catch (error) {
               toast({
-                title: "Error",
-                description: "Failed to delete product. Please try again.",
+                title: "Erreur",
+                description: "Impossible de supprimer le produit. Veuillez réessayer.",
                 variant: "destructive",
               });
             }
           }}
           className="inline-flex h-8 shrink-0 items-center justify-center rounded-md bg-destructive px-3 text-sm font-medium text-destructive-foreground hover:bg-destructive/90"
         >
-          Delete
+          Supprimer
         </button>
       ),
     });
@@ -191,7 +191,7 @@ export function AdminProducts() {
 
   return (
     <div className="space-y-8">
-      <ProductHeader onAddProduct={handleAddProduct} />
+      <ProductHeader onAddProduct={handleAddProduct} products={products} />
 
       {showForm && (
         <ProductForm
@@ -204,9 +204,9 @@ export function AdminProducts() {
         />
       )}
 
-      <ProductsTable products={products} onEdit={handleEdit} onDelete={handleDelete} />
-
       <ProductSummary products={products} />
+
+      <ProductsTable products={products} onEdit={handleEdit} onDelete={handleDelete} />
     </div>
   );
 }

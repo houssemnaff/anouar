@@ -18,6 +18,7 @@ export type Database = {
           category: string;
           description: string;
           in_stock: boolean;
+          quantity: number | null;
           featured: boolean;
           discount: number | null;
           discount_end_date: string | null;
@@ -32,6 +33,7 @@ export type Database = {
           category: string;
           description: string;
           in_stock?: boolean;
+          quantity?: number | null;
           featured?: boolean;
           discount?: number | null;
           discount_end_date?: string | null;
@@ -46,6 +48,7 @@ export type Database = {
           category?: string;
           description?: string;
           in_stock?: boolean;
+          quantity?: number | null;
           featured?: boolean;
           discount?: number | null;
           discount_end_date?: string | null;

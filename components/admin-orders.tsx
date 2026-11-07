@@ -20,14 +20,14 @@ export function AdminOrders() {
     try {
       await updateOrderStatus(orderId, 'delivered');
       toast({
-        title: 'Order Updated',
-        description: 'Order has been marked as delivered successfully.',
+        title: 'Commande mise à jour',
+        description: 'La commande a été marquée comme livrée avec succès.',
       });
     } catch (error) {
       console.error('Error marking order as delivered:', error);
       toast({
-        title: 'Error',
-        description: 'Failed to update order status. Please try again.',
+        title: 'Erreur',
+        description: 'Impossible de mettre à jour la commande. Veuillez réessayer.',
         variant: 'destructive',
       });
     }
@@ -47,7 +47,7 @@ export function AdminOrders() {
 
   return (
     <div className="space-y-8">
-      <OrderHeader />
+      <OrderHeader orders={orders} />
 
       <OrderStats orders={orders} />
 
@@ -59,7 +59,7 @@ export function AdminOrders() {
             className="flex items-center gap-2"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Orders
+            Retour aux commandes
           </Button>
           <OrderDetailCard order={selectedOrder} />
         </div>

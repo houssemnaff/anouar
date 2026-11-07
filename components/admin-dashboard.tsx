@@ -7,7 +7,7 @@ import { KeyMetrics } from './admin-dashboard/key-metrics';
 import { RecentActivity } from './admin-dashboard/recent-activity';
 import { ChartsSection } from './admin-dashboard/charts-section';
 
-export function AdminDashboard() {
+export function AdminDashboard({ onNavigate }: { onNavigate?: (tab: string) => void }) {
   const { products, orders, catalogues } = useStore();
 
   const totalProducts = products.length;
@@ -20,13 +20,13 @@ export function AdminDashboard() {
   // Calcul de la valeur totale du stock (Prix * Quantité)
   // Utilise 'quantity' si disponible, sinon 0
   const totalStockValue = products.reduce((sum, product) => {
-    const qty = (product as any).quantity || 0; // Cast to any because quantity might not be in the type def yet strictly everywhere
+    const qty = product.quantity ?? 0;
     return sum + (product.price * qty);
   }, 0);
 
   return (
     <div className="space-y-8">
-      <DashboardHeader />
+      <DashboardHeader onNavigate={onNavigate} />
 
       <StatsGrid
         totalProducts={totalProducts}
@@ -43,7 +43,7 @@ export function AdminDashboard() {
         totalProducts={totalProducts}
       />
 
-      <ChartsSection products={products} />
+      <ChartsSection products={products} orders={orders} />
 
       <RecentActivity
         orders={orders}

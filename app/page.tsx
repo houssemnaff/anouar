@@ -5,8 +5,8 @@ import { ProductCard } from '@/components/product-card';
 import { Button } from '@/components/ui/button';
 import { useStore } from '@/lib/store-context';
 import Link from 'next/link';
-import { ExternalLink, BookOpen, Sparkles, PackageCheck, Layers, Tag, ArrowRight, Mail, Phone, MapPin, ShieldCheck } from 'lucide-react';
-import { useState } from 'react';
+import { ExternalLink, BookOpen, Sparkles, PackageCheck, Layers, Tag, ArrowRight, Mail, Phone, MapPin, ShieldCheck, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useState, useRef, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 
 // Import CatalogueViewer dynamically to avoid SSR issues with PDF.js
@@ -17,13 +17,30 @@ const CatalogueViewer = dynamic(
 
 export default function Home() {
   const { products, catalogues } = useStore();
-  const featuredProducts = products.filter((p) => p.featured);
   const visibleCatalogues = catalogues.filter((c) => c.visible);
   const [selectedCatalogue, setSelectedCatalogue] = useState<{ pdfUrl: string; title: string } | null>(null);
   const [selectedImage, setSelectedImage] = useState<{ imageUrl: string; title: string } | null>(null);
+  const cataloguesRef = useRef<HTMLDivElement>(null);
+  const [activeCatalogueIndex, setActiveCatalogueIndex] = useState(0);
+
+  const scrollCatalogues = useCallback((dir: number) => {
+    const el = cataloguesRef.current;
+    if (!el) return;
+    const card = el.firstElementChild as HTMLElement | null;
+    const step = card ? card.offsetWidth + 24 : window.innerWidth * 0.85;
+    el.scrollBy({ left: dir * step, behavior: 'smooth' });
+  }, []);
+
+  const updateActiveCatalogue = useCallback(() => {
+    const el = cataloguesRef.current;
+    if (!el) return;
+    const card = el.firstElementChild as HTMLElement | null;
+    const step = card ? card.offsetWidth + 24 : 1;
+    setActiveCatalogueIndex(Math.round(Math.abs(el.scrollLeft) / step));
+  }, []);
 
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-screen bg-background flex flex-col">
       <Header />
 
       {/* PDF Viewer Modal */}
@@ -61,8 +78,10 @@ export default function Home() {
       )}
 
      {/* Hero Section */}
-<section className="relative overflow-hidden bg-gradient-to-b from-background to-secondary/60 py-16 md:py-28">
-  {/* Décor lumineux */}
+ <section className="relative overflow-hidden bg-gradient-to-b from-background to-secondary/60 py-16 md:py-28 order-1 hidden md:block">
+ {/* Décor lumineux */}
+
+ {/* Décor lumineux */}
   <div className="absolute inset-0 pointer-events-none">
     <div className="absolute -top-32 left-[10%] w-96 h-96 rounded-full bg-primary/15 blur-3xl animate-pulse" />
     <div className="absolute top-1/3 right-[5%] w-80 h-80 rounded-full bg-cyan-500/15 blur-3xl" />
@@ -133,16 +152,49 @@ export default function Home() {
 </section>
 
       {/* Catalogues Section */}
-      <section className="py-12 md:py-16 bg-white">
+      <section id="catalogues" className="py-12 md:py-16 bg-white scroll-mt-20 order-1 md:order-2">
         <div className="container mx-auto px-4">
           <h3 className="text-3xl font-bold text-primary mb-8">Nos Catalogues</h3>
           {visibleCatalogues.length > 0 ? (
             <div className="relative">
-              <div className="flex gap-6 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-blue-600 scrollbar-track-gray-200 snap-x snap-mandatory">
+              {/* Flèches pour mobile */}
+              {visibleCatalogues.length > 1 && (
+                <>
+                  <button
+                    onClick={() => scrollCatalogues(-1)}
+                    aria-label="Catalogue précédent"
+                    className="md:hidden absolute left-1 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white/90 shadow-lg border border-border flex items-center justify-center text-primary hover:bg-white active:scale-90 transition-all"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={() => scrollCatalogues(1)}
+                    aria-label="Catalogue suivant"
+                    className="md:hidden absolute right-1 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white/90 shadow-lg border border-border flex items-center justify-center text-primary hover:bg-white active:scale-90 transition-all"
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </>
+              )}
+
+              <div
+                ref={cataloguesRef}
+                onScroll={updateActiveCatalogue}
+                className="flex gap-6 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-blue-600 scrollbar-track-gray-200 snap-x snap-mandatory"
+              >
                 {visibleCatalogues.map((catalogue) => (
                   <div
                     key={catalogue.id}
-                    className="flex-shrink-0 w-[85vw] md:w-[calc(33.333%-16px)] rounded-2xl bg-card border border-border overflow-hidden hover:shadow-lg transition-shadow snap-start"
+                    onClick={() => {
+                      if (catalogue.pdfUrl) {
+                        setSelectedCatalogue({ pdfUrl: catalogue.pdfUrl, title: catalogue.title });
+                      } else {
+                        setSelectedImage({ imageUrl: catalogue.image, title: catalogue.title });
+                      }
+                    }}
+                    className={`flex-shrink-0 w-[85vw] md:w-[calc(33.333%-16px)] rounded-2xl bg-card border border-border overflow-hidden hover:shadow-lg active:scale-[0.98] transition-all snap-start ${
+                      catalogue.pdfUrl || catalogue.image ? 'cursor-pointer' : ''
+                    }`}
                   >
                     {/* Catalogue Preview */}
                     <div className="relative h-64 bg-secondary group cursor-pointer">
@@ -177,16 +229,22 @@ export default function Home() {
                       <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{catalogue.description}</p>
                       {catalogue.pdfUrl ? (
                         <Button
-                          onClick={() => setSelectedCatalogue({ pdfUrl: catalogue.pdfUrl!, title: catalogue.title })}
-                          className="rounded-lg w-full gap-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedCatalogue({ pdfUrl: catalogue.pdfUrl!, title: catalogue.title });
+                          }}
+                          className="hidden md:flex rounded-lg w-full gap-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
                         >
                           <BookOpen className="w-4 h-4" />
                           Ouvrir le catalogue complet
                         </Button>
                       ) : (
                         <Button
-                          onClick={() => setSelectedImage({ imageUrl: catalogue.image, title: catalogue.title })}
-                          className="rounded-lg w-full gap-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedImage({ imageUrl: catalogue.image, title: catalogue.title });
+                          }}
+                          className="hidden md:flex rounded-lg w-full gap-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
                         >
                           <ExternalLink className="w-4 h-4" />
                           Voir l'image
@@ -196,9 +254,22 @@ export default function Home() {
                   </div>
                 ))}
               </div>
+              {/* Points indicateurs (mobile) */}
+              {visibleCatalogues.length > 1 && (
+                <div className="md:hidden flex justify-center gap-1.5 mt-2">
+                  {visibleCatalogues.map((_, i) => (
+                    <span
+                      key={i}
+                      className={`h-2 rounded-full transition-all duration-300 ${
+                        activeCatalogueIndex === i ? 'w-6 bg-blue-600' : 'w-2 bg-gray-300'
+                      }`}
+                    />
+                  ))}
+                </div>
+              )}
               {/* Scroll Indicator */}
               {visibleCatalogues.length > 3 && (
-                <div className="text-center mt-4 text-sm text-muted-foreground">
+                <div className="hidden md:block text-center mt-4 text-sm text-muted-foreground">
                   ← Faites défiler horizontalement pour voir plus de catalogues →
                 </div>
               )}
@@ -212,18 +283,18 @@ export default function Home() {
       </section>
 
       {/* Featured Products Section */}
-      <section className="py-12 md:py-16">
+      <section className="py-12 md:py-16 order-2 md:order-3">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-8">
-            <h3 className="text-3xl font-bold text-primary">Produits à la une</h3>
+            <h3 className="text-3xl font-bold text-primary">Tous nos produits</h3>
             <Link href="/products">
               <Button variant="outline" className="rounded-lg bg-transparent">
                 Voir tout
               </Button>
             </Link>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {featuredProducts.map((product) => (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+            {products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
@@ -231,7 +302,7 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-primary text-primary-foreground py-12 md:py-16">
+      <section className="bg-primary text-primary-foreground py-12 md:py-16 order-3 md:order-4">
         <div className="container mx-auto px-4 text-center">
           <h3 className="text-3xl md:text-4xl font-bold mb-4">
             Fraîcheur garantie, livrée chez vous
@@ -252,7 +323,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-card border-t border-border">
+      <footer className="bg-card border-t border-border order-4 md:order-5">
         <div className="container mx-auto px-4 py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
             {/* Marque */}

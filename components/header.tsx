@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useStore } from '@/lib/store-context';
-import { ShoppingCart, Menu, X, Package, ShoppingBag, Percent } from 'lucide-react';
+import { ShoppingCart, Menu, X, Package, ShoppingBag, Percent, BookOpen } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { AdminLoginModal } from '@/components/admin-login-modal';
@@ -58,6 +58,14 @@ export function Header() {
                 </Button>
               </Link>
 
+              {/* Catalogues Link with Icon */}
+              <Link href="/#catalogues">
+                <Button variant="ghost" className="hidden md:flex items-center gap-2 hover:bg-violet-50 hover:text-violet-600 transition-colors">
+                  <BookOpen className="w-5 h-5" />
+                  <span className="font-medium">Catalogues</span>
+                </Button>
+              </Link>
+
               {/* Cart Icon */}
               <Link href="/cart" className="relative">
                 <Button variant="ghost" size="icon">
@@ -100,6 +108,13 @@ export function Header() {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Soldes
+              </Link>
+              <Link
+                href="/#catalogues"
+                className="block text-foreground hover:text-violet-600 transition-colors py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Catalogues
               </Link>
             </nav>
           )}

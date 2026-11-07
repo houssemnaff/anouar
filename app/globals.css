@@ -81,3 +81,17 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Defilement automatique des images du hero */
+@keyframes hero-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.hero-scroll-track {
+  will-change: transform;
+  transform: translateZ(0);
+  animation: hero-scroll 40s linear infinite;
+}
+.hero-scroll-track:hover {
+  animation-play-state: paused;
+}

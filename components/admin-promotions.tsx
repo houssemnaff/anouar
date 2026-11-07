@@ -72,16 +72,16 @@ export function AdminPromotions() {
 
       if (imageFile) {
         toast({
-          title: "Uploading image...",
-          description: "Please wait while we upload the image.",
+          title: "Téléversement de l'image...",
+          description: "Veuillez patienter pendant le téléchargement.",
         });
         imageUrl = await uploadImage(imageFile, 'catalogues');
       }
 
       if (pdfFile) {
         toast({
-          title: "Uploading PDF...",
-          description: "Please wait while we upload the PDF file.",
+          title: "Téléversement du PDF...",
+          description: "Veuillez patienter pendant le téléchargement.",
         });
         pdfUrl = await uploadPDF(pdfFile, 'catalogues');
       }
@@ -96,34 +96,34 @@ export function AdminPromotions() {
       if (editingCatalogueId) {
         await updateCatalogue(editingCatalogueId, catalogueData);
         toast({
-          title: "Catalogue updated",
-          description: "The catalogue has been updated successfully.",
+          title: "Catalogue modifié",
+          description: "Le catalogue a été mis à jour avec succès.",
         });
       } else {
         await addCatalogue(catalogueData);
         toast({
-          title: "Catalogue added",
-          description: "The new catalogue has been added successfully.",
+          title: "Catalogue ajouté",
+          description: "Le nouveau catalogue a été ajouté avec succès.",
         });
       }
       resetForm();
     } catch (error) {
       console.error('Error saving catalogue:', error);
       
-      let errorMessage = "Failed to upload files or save catalogue. Please try again.";
+      let errorMessage = "Échec du téléversement des fichiers ou de l'enregistrement. Veuillez réessayer.";
       
       if (error instanceof Error) {
         if (error.message.includes('row-level security') || error.message.includes('Permission denied')) {
-          errorMessage = "Permission denied. Please configure Storage policies in Supabase Dashboard (see SUPABASE_STORAGE_SETUP.md)";
+          errorMessage = "Autorisation refusée. Veuillez configurer les règles de Stockage dans The Supabase Dashboard.";
         } else if (error.message.includes('not found')) {
-          errorMessage = 'Bucket "uploads" not found. Please create it in Supabase Dashboard.';
+          errorMessage = 'Bucket "uploads" introuvable. Veuillez le créer dans le Dashboard Supabase.';
         } else {
           errorMessage = error.message;
         }
       }
       
       toast({
-        title: "Error",
+        title: "Erreur",
         description: errorMessage,
         variant: "destructive",
       });
@@ -132,29 +132,29 @@ export function AdminPromotions() {
 
   const handleDelete = (catalogueId: string) => {
     toast({
-      title: "Confirm deletion",
-      description: "Are you sure you want to delete this catalogue?",
+      title: "Confirmer la suppression",
+      description: "Voulez-vous vraiment supprimer ce catalogue ?",
       action: (
         <button
           onClick={async () => {
             try {
               await deleteCatalogue(catalogueId);
               toast({
-                title: "Catalogue deleted",
-                description: "The catalogue has been deleted successfully.",
+                title: "Catalogue supprimé",
+                description: "Le catalogue a été supprimé avec succès.",
                 variant: "destructive",
               });
             } catch (error) {
               toast({
-                title: "Error",
-                description: "Failed to delete catalogue. Please try again.",
+                title: "Erreur",
+                description: "Impossible de supprimer le catalogue. Veuillez réessayer.",
                 variant: "destructive",
               });
             }
           }}
           className="inline-flex h-8 shrink-0 items-center justify-center rounded-md bg-destructive px-3 text-sm font-medium text-destructive-foreground hover:bg-destructive/90"
         >
-          Delete
+          Supprimer
         </button>
       ),
     });
@@ -181,14 +181,16 @@ export function AdminPromotions() {
       await toggleCatalogueVisibility(catalogueId);
       const catalogue = catalogues.find(c => c.id === catalogueId);
       toast({
-        title: "Visibility Updated",
-        description: `Catalogue is now ${catalogue?.visible ? 'hidden' : 'visible'}.`,
+        title: "Visibilité mise à jour",
+        description: catalogue?.visible
+          ? 'Le catalogue est maintenant visible pour les clients.'
+          : 'Le catalogue est maintenant masqué pour les clients.',
       });
     } catch (error) {
       console.error('Error toggling catalogue visibility:', error);
       toast({
-        title: "Error",
-        description: "Failed to update catalogue visibility. Please try again.",
+        title: "Erreur",
+        description: "Impossible de mettre à jour la visibilité. Veuillez réessayer.",
         variant: "destructive",
       });
     }
@@ -218,7 +220,7 @@ export function AdminPromotions() {
 
   return (
     <div className="space-y-8">
-      <CatalogueHeader onAddCatalogue={handleAddCatalogue} />
+      <CatalogueHeader onAddCatalogue={handleAddCatalogue} catalogues={catalogues} />
 
       {showForm && (
         <CatalogueForm
