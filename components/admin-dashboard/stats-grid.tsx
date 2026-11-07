@@ -16,25 +16,25 @@ export function StatsGrid({
 }: StatsGridProps) {
   const stats = [
     {
-      title: 'Total Products',
+      title: 'Total Produits',
       value: totalProducts,
       icon: Package,
       color: 'bg-blue-100 text-blue-600',
     },
     {
-      title: 'In Stock',
+      title: 'En Stock',
       value: inStockProducts,
       icon: TrendingUp,
       color: 'bg-green-100 text-green-600',
     },
     {
-      title: 'Total Orders',
+      title: 'Commandes',
       value: totalOrders,
       icon: ShoppingCart,
       color: 'bg-purple-100 text-purple-600',
     },
     {
-      title: 'Pending Orders',
+      title: 'En attente',
       value: pendingOrders,
       icon: Tag,
       color: 'bg-orange-100 text-orange-600',

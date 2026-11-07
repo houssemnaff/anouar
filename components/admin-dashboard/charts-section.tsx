@@ -24,9 +24,9 @@ export function ChartsSection({ products }: ChartsSectionProps) {
   }));
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+    <div className="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-gray-200">
       <h3 className="text-lg font-bold text-gray-900 mb-6">Répartition par Catégorie</h3>
-      <div className="h-[300px] w-full">
+      <div className="h-[250px] md:h-[300px] w-full">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} />

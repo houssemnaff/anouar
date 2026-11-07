@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useStore } from '@/lib/store-context';
-import { ShoppingCart, Menu, X, Package, ShoppingBag, Percent } from 'lucide-react';
+import { ShoppingCart, Menu, X, Package, ShoppingBag, Percent, Lock } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { AdminLoginModal } from '@/components/admin-login-modal';
@@ -101,6 +101,17 @@ export function Header() {
               >
                 Soldes
               </Link>
+              
+              <div className="pt-4 mt-4 border-t border-border">
+                <Link
+                  href="/login"
+                  className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors py-2"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Lock className="w-4 h-4" />
+                  Espace Admin
+                </Link>
+              </div>
             </nav>
           )}
         </div>

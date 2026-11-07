@@ -72,8 +72,8 @@ export function AdminHeader({ activeTab, onTabChange }: AdminHeaderProps) {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
-            <div className="relative w-12 h-12 bg-white rounded-full p-1 shadow-md">
+          <Link href="/" className="flex items-center gap-2 md:gap-3 hover:opacity-90 transition-opacity min-w-0 max-w-[60%]">
+            <div className="relative w-10 h-10 md:w-12 md:h-12 bg-white rounded-full p-1 shadow-md flex-shrink-0">
               <Image 
                 src="/anouar1-removebg-preview.png" 
                 alt="Anouar Market Logo" 
@@ -82,9 +82,13 @@ export function AdminHeader({ activeTab, onTabChange }: AdminHeaderProps) {
                 className="object-contain"
               />
             </div>
-            <div>
-              <h1 className="text-lg font-bold">{userEmail}</h1>
-              <p className="text-xs text-blue-100">Anouar Market</p>
+            <div className="min-w-0 flex flex-col justify-center">
+              <h1 className="text-sm md:text-lg font-bold truncate leading-tight">
+                {userEmail}
+              </h1>
+              <p className="text-[10px] md:text-xs text-blue-100 hidden sm:block truncate">
+                Anouar Market
+              </p>
             </div>
           </Link>
 
@@ -106,15 +110,15 @@ export function AdminHeader({ activeTab, onTabChange }: AdminHeaderProps) {
           </nav>
 
           {/* Logout Button */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 md:gap-2 flex-shrink-0 ml-2">
             <Button
               onClick={handleLogout}
               variant="ghost"
               size="sm"
-              className="text-white hover:bg-blue-500 rounded-lg transition-all duration-300"
+              className="text-white hover:bg-blue-500 rounded-lg transition-all duration-300 px-2 md:px-3"
             >
-              <LogOut className="w-4 h-4 mr-2" />
-              Déconnexion
+              <LogOut className="w-4 h-4 md:mr-2" />
+              <span className="hidden md:inline">Déconnexion</span>
             </Button>
 
             {/* Mobile Menu Toggle */}

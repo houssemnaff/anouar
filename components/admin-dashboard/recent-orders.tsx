@@ -6,10 +6,10 @@ interface RecentOrdersProps {
 
 export function RecentOrders({ orders }: RecentOrdersProps) {
   return (
-    <div className="lg:col-span-2 bg-card border border-border rounded-2xl p-6">
-      <h2 className="text-lg font-bold text-primary mb-4">Recent Orders</h2>
+    <div className="lg:col-span-2 bg-card border border-border rounded-2xl p-4 md:p-6">
+      <h2 className="text-lg font-bold text-primary mb-4">Commandes Récentes</h2>
       {orders.length === 0 ? (
-        <p className="text-muted-foreground text-center py-8">No orders yet</p>
+        <p className="text-muted-foreground text-center py-8">Aucune commande</p>
       ) : (
         <div className="space-y-3 max-h-64 overflow-y-auto">
           {orders
@@ -20,17 +20,17 @@ export function RecentOrders({ orders }: RecentOrdersProps) {
                 key={order.id}
                 className="flex items-center justify-between p-3 bg-secondary rounded-lg"
               >
-                <div>
-                  <p className="font-semibold text-foreground">
+                <div className="min-w-0 flex-1 mr-4">
+                  <p className="font-semibold text-foreground truncate">
                     {order.customerName}
                   </p>
-                  <p className="text-sm text-muted-foreground">
-                    {order.items.length} item{order.items.length !== 1 ? 's' : ''}
+                  <p className="text-sm text-muted-foreground truncate">
+                    {order.items.length} produit{order.items.length > 1 ? 's' : ''}
                   </p>
                 </div>
-                <div className="text-right">
+                <div className="text-right flex-shrink-0">
                   <p className="font-bold text-primary">
-                    ${order.totalPrice.toFixed(2)}
+                    {order.totalPrice.toFixed(3)} DT
                   </p>
                   <span
                     className={`text-xs px-2 py-1 rounded-full ${
@@ -39,7 +39,7 @@ export function RecentOrders({ orders }: RecentOrdersProps) {
                         : 'bg-green-100 text-green-700'
                     }`}
                   >
-                    {order.status}
+                    {order.status === 'pending' ? 'En attente' : 'Livré'}
                   </span>
                 </div>
               </div>
