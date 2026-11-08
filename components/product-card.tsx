@@ -33,15 +33,15 @@ export function ProductCard({ product }: ProductCardProps) {
       {/* Image */}
       <Link
         href={`/product/${product.id}`}
-        className="relative block w-full aspect-[4/3] bg-gradient-to-br from-secondary via-background to-secondary overflow-hidden"
+        className="relative block w-full aspect-square bg-gradient-to-br from-secondary via-background to-secondary overflow-hidden"
       >
         {product.inStock ? (
           <Image
             src={product.image || '/placeholder.svg'}
             alt={product.name}
             fill
-            sizes="(max-width: 640px) 50vw, 25vw"
-            className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            className="object-cover contrast-110 saturate-110 transition-transform duration-700 ease-out group-hover:scale-110"
           />
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-muted-foreground">
@@ -93,9 +93,7 @@ export function ProductCard({ product }: ProductCardProps) {
           </h3>
         </Link>
 
-        <p className="text-sm text-muted-foreground line-clamp-2 flex-grow">
-          {product.description}
-        </p>
+        <div className="flex-grow" />
 
         {/* Prix + action */}
         <div className="flex items-end justify-between pt-2">

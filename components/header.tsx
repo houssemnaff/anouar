@@ -16,7 +16,7 @@ export function Header() {
   return (
     <>
       <AdminLoginModal />
-      <header className="sticky top-0 z-50 bg-white border-b border-border">
+      <header className="sticky top-0 z-50 bg-blue-600 border-b border-blue-700 md:bg-white md:border-border">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
@@ -29,10 +29,10 @@ export function Header() {
     />
   </div>
   <div>
-    <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+    <h1 className="text-xl font-bold text-white md:text-transparent md:bg-gradient-to-r md:from-blue-600 md:to-blue-800 md:bg-clip-text">
       Anouar Market
     </h1>
-    <p className="text-xs text-blue-600/70 font-medium">
+    <p className="text-xs text-white/80 font-medium md:text-blue-600/70">
       Produits cosmétiques de qualité
     </p>
   </div>
@@ -68,7 +68,7 @@ export function Header() {
 
               {/* Cart Icon */}
               <Link href="/cart" className="relative">
-                <Button variant="ghost" size="icon">
+                <Button variant="ghost" size="icon" className="text-white hover:text-white hover:bg-white/10">
                   <ShoppingCart className="w-5 h-5" />
                   {cartCount > 0 && (
                     <span className="absolute -top-2 -right-2 bg-accent text-accent-foreground text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
@@ -80,7 +80,7 @@ export function Header() {
 
               {/* Mobile Menu Toggle */}
               <button
-                className="md:hidden"
+                className="md:hidden text-white"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               >
                 {mobileMenuOpen ? (
@@ -94,24 +94,24 @@ export function Header() {
 
           {/* Mobile Navigation */}
           {mobileMenuOpen && (
-            <nav className="md:hidden mt-4 pb-4 space-y-2 border-t border-border pt-4">
+            <nav className="md:hidden mt-4 pb-4 space-y-2 border-t border-white/20 pt-4">
               <Link
                 href="/products"
-                className="block text-foreground hover:text-primary transition-colors py-2"
+                className="block text-white hover:text-blue-200 transition-colors py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Produits
               </Link>
               <Link
                 href="/sales"
-                className="block text-foreground hover:text-red-600 transition-colors py-2"
+                className="block text-white hover:text-red-200 transition-colors py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Soldes
               </Link>
               <Link
                 href="/#catalogues"
-                className="block text-foreground hover:text-violet-600 transition-colors py-2"
+                className="block text-white hover:text-violet-200 transition-colors py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Catalogues
